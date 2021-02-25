@@ -1,6 +1,7 @@
 package com.udacity.asteroidradar.domain
 
 import android.os.Parcelable
+import com.squareup.moshi.Json
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
@@ -16,7 +17,8 @@ data class Asteroid(
 
 
 data class ImageOfDay(
-    val id: Long,
-    val url: String,
-    val title: String
+        @Json(name = "media_type")
+        val mediaType: String,
+        val title: String,
+        val url: String
 )

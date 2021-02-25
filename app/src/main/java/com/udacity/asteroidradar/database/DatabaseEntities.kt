@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "asteroids_table")
-data class Asteroid constructor(
+data class DataAsteroid constructor(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0L,
     val code_name: String,
@@ -17,7 +17,8 @@ data class Asteroid constructor(
     )
 
 @Entity(tableName = "image_of_day_table")
-data class ImageOfDay constructor(
+data class DataImageOfDay constructor(
+    @PrimaryKey(autoGenerate = true)
     val id: Long = 0L,
     val url: String,
     val title: String

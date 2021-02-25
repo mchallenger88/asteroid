@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 import com.udacity.asteroidradar.domain.Asteroid
+import timber.log.Timber
 
 fun parseAsteroidsJsonResult(jsonResult: JSONObject): ArrayList<Asteroid> {
     val nearEarthObjectsJson = jsonResult.getJSONObject("near_earth_objects")
@@ -52,6 +53,5 @@ private fun getNextSevenDaysFormattedDates(): ArrayList<String> {
         formattedDateList.add(dateFormat.format(currentTime))
         calendar.add(Calendar.DAY_OF_YEAR, 1)
     }
-
     return formattedDateList
 }
