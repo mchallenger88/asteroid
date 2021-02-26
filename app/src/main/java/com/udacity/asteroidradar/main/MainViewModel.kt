@@ -1,23 +1,23 @@
 package com.udacity.asteroidradar.main
 
-import android.net.Network
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.udacity.asteroidradar.domain.Asteroid
 import com.udacity.asteroidradar.domain.ImageOfDay
-import com.udacity.asteroidradar.network.AsteroidApi
-import com.udacity.asteroidradar.network.ImageApi
-import com.udacity.asteroidradar.network.NetworkAsteroid
-import com.udacity.asteroidradar.network.parseAsteroidsJsonResult
+import com.udacity.asteroidradar.api.NasaApiService
+import com.udacity.asteroidradar.api.parseAsteroidsJsonResult
 import kotlinx.coroutines.launch
-import timber.log.Timber
+import org.json.JSONObject
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import java.time.LocalDate
+import kotlin.collections.ArrayList
 
 enum class ApiStatus { LOADING, ERROR, DONE }
 private const val KEY = "xD3AQoZhGup4EAHwQSsog3qkjBMe5Q1ynylSXJ1S"
-private const val START_DATE = "2021-02-25"
-private const val END_DATE = "2021-02-26"
 
 class MainViewModel : ViewModel() {
 
@@ -41,15 +41,27 @@ class MainViewModel : ViewModel() {
     }
 
     private fun getAsteroidList(){
-        viewModelScope.launch{
+
+        val startDate = LocalDate.now().toString()
+        val endDate = LocalDate.now().plusDays(7).toString()
+        viewModelScope.launch {
             _status.value = ApiStatus.LOADING
-            try {
-                val asteroidList: ArrayList<Asteroid> = parseAsteroidsJsonResult(AsteroidApi.retrofitService.getAsteroidlist(START_DATE, END_DATE, KEY))
-                _asteroids.value = asteroidList
-            }catch (e: Exception) {
-                _status.value = ApiStatus.ERROR
-                _asteroids.value = null
-            }
+
+            NasaApiService.Companion.AsteroidApi.retrofitService.getAsteroidlist(startDate, endDate, KEY)
+                .enqueue(object : Callback<String> {
+                    override fun onResponse(call: Call<String>, response: Response<String>) {
+                        if (response.body() !== null) {
+                            val result = JSONObject(response.body())
+                            val data = parseAsteroidsJsonResult(result)
+
+                            _asteroids.value = data
+                        }
+                    }
+
+                    override fun onFailure(call: Call<String>, t: Throwable) {
+//                        _status.value = "Failure: " + t.message
+                    }
+                })
         }
     }
 
@@ -58,7 +70,7 @@ class MainViewModel : ViewModel() {
         viewModelScope.launch {
             _status.value = ApiStatus.LOADING
             try {
-                _iod.value = ImageApi.retrofitService.getImageOfDay(KEY)
+                _iod.value = NasaApiService.Companion.ImageApi.retrofitService.getImageOfDay(KEY)
                 _status.value = ApiStatus.DONE
 
             } catch (e: Exception) {
@@ -68,9 +80,7 @@ class MainViewModel : ViewModel() {
         }
     }
 
-    private fun convertArrayList(list1: ArrayList<Asteroid>){
 
-    }
 
 
 }

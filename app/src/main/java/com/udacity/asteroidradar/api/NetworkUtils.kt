@@ -1,4 +1,5 @@
-package com.udacity.asteroidradar.network
+
+package com.udacity.asteroidradar.api
 
 import com.udacity.asteroidradar.Constants
 import org.json.JSONObject
@@ -6,7 +7,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 import com.udacity.asteroidradar.domain.Asteroid
-import timber.log.Timber
 
 fun parseAsteroidsJsonResult(jsonResult: JSONObject): ArrayList<Asteroid> {
     val nearEarthObjectsJson = jsonResult.getJSONObject("near_earth_objects")

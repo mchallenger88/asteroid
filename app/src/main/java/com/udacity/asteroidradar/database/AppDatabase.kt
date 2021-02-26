@@ -6,18 +6,18 @@ import androidx.room.*
 
 
 @Database(entities = [DataAsteroid::class, DataImageOfDay::class], version = 1)
-abstract class AsteroidsDatabase : RoomDatabase() {
+abstract class AppDatabase : RoomDatabase() {
     abstract val asteroidDatabaseDao: AsteroidDatabaseDao
 }
 
-private lateinit var INSTANCE: AsteroidsDatabase
+private lateinit var INSTANCE: AppDatabase
 
-fun getDatabase(context: Context): AsteroidsDatabase {
-    synchronized(AsteroidsDatabase::class.java) {
+fun getDatabase(context: Context): AppDatabase {
+    synchronized(AppDatabase::class.java) {
         if (!::INSTANCE.isInitialized) {
             INSTANCE = Room.databaseBuilder(context.applicationContext,
-                AsteroidsDatabase::class.java,
-                "asteroids_database").build()
+                AppDatabase::class.java,
+                "app_database").build()
         }
     }
     return INSTANCE

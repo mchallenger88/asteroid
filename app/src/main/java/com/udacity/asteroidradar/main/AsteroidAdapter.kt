@@ -14,10 +14,10 @@ class AsteroidAdapter(val onClickListener: OnClickListener) : ListAdapter<Astero
     }
 
     override fun onBindViewHolder(holder: AsteroidAdapter.AsteroidViewHolder, position: Int) {
-        val marsProperty = getItem(position)
-        holder.bind(marsProperty)
+        val asteroid = getItem(position)
+        holder.bind(asteroid)
         holder.itemView.setOnClickListener {
-            onClickListener.onClick(marsProperty)
+            onClickListener.onClick(asteroid)
         }
     }
 

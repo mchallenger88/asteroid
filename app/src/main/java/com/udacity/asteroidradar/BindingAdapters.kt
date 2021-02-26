@@ -4,9 +4,12 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.net.toUri
 import androidx.databinding.BindingAdapter
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.squareup.picasso.Picasso
+import com.udacity.asteroidradar.domain.Asteroid
+import com.udacity.asteroidradar.main.AsteroidAdapter
 
 @BindingAdapter("statusIcon")
 fun bindAsteroidStatusImage(imageView: ImageView, isHazardous: Boolean) {
@@ -66,4 +69,10 @@ fun bindGlideImage(imgView: ImageView, imgUrl: String?) {
                         .error(R.drawable.placeholder_picture_of_day))
                 .into(imgView)
     }
+}
+
+@BindingAdapter("listData")
+fun bindRecyclerView(recyclerView: RecyclerView, data: List<Asteroid>?) {
+    val adapter = recyclerView.adapter as AsteroidAdapter
+    adapter.submitList(data)
 }
