@@ -48,4 +48,5 @@ class AsteroidAdapter(private val onClickListener: OnClickListener) : ListAdapte
         fun onClick(asteroid:Asteroid) = clickListener(asteroid)
     }
 
+
 }

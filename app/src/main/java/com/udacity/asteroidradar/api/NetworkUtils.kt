@@ -10,7 +10,6 @@ import com.udacity.asteroidradar.domain.Asteroid
 
 fun parseAsteroidsJsonResult(jsonResult: JSONObject): ArrayList<Asteroid> {
     val nearEarthObjectsJson = jsonResult.getJSONObject("near_earth_objects")
-
     val asteroidList = ArrayList<Asteroid>()
 
     val nextSevenDaysFormattedDates = getNextSevenDaysFormattedDates()

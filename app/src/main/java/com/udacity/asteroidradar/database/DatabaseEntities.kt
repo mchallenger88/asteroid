@@ -3,7 +3,12 @@ package com.udacity.asteroidradar.database
 import android.provider.MediaStore
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.squareup.moshi.JsonClass
 import com.udacity.asteroidradar.domain.Asteroid
+
+
+@JsonClass(generateAdapter = true)
+data class AsteroidContainer(val asteroids: ArrayList<Asteroid>)
 
 @Entity(tableName = "asteroids_table")
 data class DataAsteroid constructor(
@@ -26,7 +31,22 @@ data class DataImageOfDay constructor(
     val title: String
 )
 
-fun List<DataAsteroid>.asDomainModel(): List<Asteroid> {
+fun AsteroidContainer.asDatabaseModel(): Array<DataAsteroid> {
+    return asteroids.map {
+        DataAsteroid(
+            id = it.id,
+            code_name = it.codename,
+            close_approach_date = it.closeApproachDate,
+            absolute_magnitude = it.absoluteMagnitude,
+            estimated_diameter_max = it.estimatedDiameter,
+            relative_velocity = it.relativeVelocity,
+            distance_from_earth = it.distanceFromEarth,
+            is_potentially_hazardous = it.isPotentiallyHazardous
+        )
+    }.toTypedArray()
+}
+
+fun List<DataAsteroid>.asDomainModel(): List<Asteroid>{
     return map {
         Asteroid(
             id = it.id,
@@ -38,6 +58,6 @@ fun List<DataAsteroid>.asDomainModel(): List<Asteroid> {
             distanceFromEarth = it.distance_from_earth,
             isPotentiallyHazardous = it.is_potentially_hazardous
         )
+
     }
 }
-

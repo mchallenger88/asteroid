@@ -18,7 +18,7 @@ import retrofit2.http.Query
  */
 interface NasaApiService {
     @GET("neo/rest/v1/feed")
-    fun getAsteroidlist(
+    fun getAsteroidList(
             @Query("start_date") start_date: String?,
             @Query("end_date") end_date: String?,
             @Query("api_key") key: String?
@@ -61,5 +61,15 @@ interface NasaApiService {
         }
 
     }
+}
 
+class AsteroidHelper(private val apiService: NasaApiService.Companion.AsteroidApi,
+                     private val startDate: String,
+                     private val endDate: String,
+                     private val Key: String) {
+    suspend fun getAsteroids() = apiService.retrofitService.getAsteroidList(startDate, endDate, Key)
+}
+
+class ImageOfDayHelper(private val apiService: NasaApiService.Companion.ImageApi, private val Key: String){
+    suspend fun getImage() = apiService.retrofitService.getImageOfDay(Key)
 }
