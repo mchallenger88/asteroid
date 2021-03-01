@@ -64,6 +64,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         val endDate = LocalDate.now().plusDays(7).toString()
         viewModelScope.launch {
             try {
+                asteroidRepository.clearAsteroids()
                 asteroidRepository.refreshAsteroids(startDate, endDate, KEY)
 
                 _eventNetworkError.value = false
