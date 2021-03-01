@@ -18,19 +18,7 @@ data class NetworkAsteroid(
         val distanceFromEarth: Double,
         val isPotentiallyHazardous: Boolean)
 
-fun NetworkAsteroidContainer.asDatabaseModel(): Array<DataAsteroid> {
-        return asteroids.map {
-                DataAsteroid (
-                        id = it.id,
-                        code_name = it.codename,
-                        close_approach_date = it.closeApproachDate,
-                        absolute_magnitude = it.absoluteMagnitude,
-                        estimated_diameter_max = it.estimatedDiameter,
-                        relative_velocity = it.relativeVelocity,
-                        distance_from_earth = it.distanceFromEarth,
-                        is_potentially_hazardous = it.isPotentiallyHazardous)
-        }.toTypedArray()
-}
+
 
 fun ArrayList<Asteroid>.asDatabaseModel(asteroids: ArrayList<Asteroid>): Array<DataAsteroid>{
         return asteroids.map {

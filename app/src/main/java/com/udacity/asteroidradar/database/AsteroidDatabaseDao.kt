@@ -23,7 +23,7 @@ interface AsteroidDatabaseDao {
      * @param asteroid and Image of Day new value to write
      */
     @Update
-    fun updateNEO(asteroid: DataAsteroid)
+    fun updateAsteroid(asteroid: DataAsteroid)
 
     @Update
     fun updateIOD(iod: DataImageOfDay)
@@ -34,7 +34,7 @@ interface AsteroidDatabaseDao {
      * @param key
      */
     @Query("SELECT * from asteroids_table WHERE Id = :key")
-    fun getNEO(key: Long): DataAsteroid?
+    fun getAsteroid(key: Long): DataAsteroid?
 
     @Query("SELECT * from image_of_day_table WHERE Id = :key")
     fun getIOD(key: Long): DataImageOfDay?
@@ -45,7 +45,7 @@ interface AsteroidDatabaseDao {
      * This does not delete the table, only its contents.
      */
     @Query("DELETE FROM asteroids_table")
-    fun clearNEO()
+    fun clearAsteroids()
 
     @Query("DELETE FROM image_of_day_table")
     fun clearIOD()
@@ -55,7 +55,7 @@ interface AsteroidDatabaseDao {
      *
      * sorted by start time in descending order.
      */
-    @Query("SELECT * FROM asteroids_table ORDER BY Id DESC")
+    @Query("SELECT * FROM asteroids_table ORDER BY close_approach_date ASC")
     fun getAllAsteroids(): LiveData<List<DataAsteroid>>
 
     /**
@@ -69,5 +69,8 @@ interface AsteroidDatabaseDao {
      */
     @Query("SELECT * from asteroids_table WHERE Id = :key")
     fun getAsteroidWithId(key: Long): LiveData<DataAsteroid>
+
+    @Query("SELECT COUNT(*) FROM asteroids_table")
+    fun getCount(): Int
 }
 

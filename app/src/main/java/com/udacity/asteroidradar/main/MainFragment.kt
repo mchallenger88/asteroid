@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import com.udacity.asteroidradar.R
 import com.udacity.asteroidradar.databinding.FragmentMainBinding
+import timber.log.Timber
 
 private const val KEY = "xD3AQoZhGup4EAHwQSsog3qkjBMe5Q1ynylSXJ1S"
 
@@ -28,6 +29,7 @@ class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -39,15 +41,14 @@ class MainFragment : Fragment() {
         binding.viewModel = viewModel
 
         binding.asteroidRecycler.adapter = AsteroidAdapter(AsteroidAdapter.OnClickListener {
-            if ( null != it ) {
                 this.findNavController().navigate(MainFragmentDirections.actionShowDetail(it))
                 viewModel.navigateToAsteroid
-            }
         })
 
         setHasOptionsMenu(true)
 
         viewModel.asteroids.observe(viewLifecycleOwner, Observer { asteroids ->
+
 
         })
 

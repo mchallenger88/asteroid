@@ -1,6 +1,10 @@
 package com.udacity.asteroidradar.main
 
 import android.app.Application
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.lifecycle.*
 import com.udacity.asteroidradar.domain.Asteroid
 import com.udacity.asteroidradar.domain.ImageOfDay
@@ -8,6 +12,7 @@ import com.udacity.asteroidradar.api.NasaApiService
 import com.udacity.asteroidradar.database.AsteroidRepository
 import com.udacity.asteroidradar.database.getDatabase
 import kotlinx.coroutines.launch
+import java.io.IOException
 import java.time.LocalDate
 
 
@@ -19,15 +24,13 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val database = getDatabase(application)
     private val asteroidRepository = AsteroidRepository(database)
 
+    private val _eventNetworkError = MutableLiveData<Boolean>()
+    val eventNetworkError: LiveData<Boolean>
+            get() = _eventNetworkError
 
-//    fun getAllAsteroids() = liveData(Dispatchers.IO) {
-//        emit(Resource.loading(data = null))
-//        try {
-//            emit(Resource.success(data = repository.getAsteroids()))
-//        } catch (exception: Exception) {
-//            emit(Resource.error(data = null, message = exception.message ?: "Error Occurred!"))
-//        }
-//    }
+    private val _isNetworkErrorShown = MutableLiveData<Boolean>()
+    val isNetworkErrorShown: LiveData<Boolean>
+        get() = _isNetworkErrorShown
 
     // The internal MutableLiveData String that stores the status of the most recent request
     private val _status = MutableLiveData<ApiStatus>()
@@ -38,9 +41,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     val iod: LiveData<ImageOfDay>
         get() = _iod
 
-    private val _asteroids = MutableLiveData<List<Asteroid>>()
     var asteroids: LiveData<List<Asteroid>>
-        get() = _asteroids
 
     private val _size = MutableLiveData<Int>()
     val size: LiveData<Int>
@@ -51,15 +52,28 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         get() = _navigateToAsteroid
 
     init {
+
+        refreshDataFromRepository()
+        asteroids = asteroidRepository.asteroids
+        getImageOfDay()
+
+    }
+
+    private fun refreshDataFromRepository() {
         val startDate = LocalDate.now().toString()
         val endDate = LocalDate.now().plusDays(7).toString()
         viewModelScope.launch {
-            asteroidRepository.refreshAsteroids(startDate, endDate, KEY)
-        }
-        asteroids = asteroidRepository.asteroids
-        getImageOfDay()
-    }
+            try {
+                asteroidRepository.refreshAsteroids(startDate, endDate, KEY)
 
+                _eventNetworkError.value = false
+                _isNetworkErrorShown.value = false
+
+            } catch (networkError: IOException) {
+
+            }
+        }
+    }
 
 
     private fun getImageOfDay() {
@@ -81,6 +95,10 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     fun goToAsteroidDetails(asteroid: Asteroid) {
         _navigateToAsteroid.value = asteroid
     }
+
+
+
+
 
 }
 
