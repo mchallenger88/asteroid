@@ -9,6 +9,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.squareup.picasso.Picasso
 import com.udacity.asteroidradar.domain.Asteroid
+import com.udacity.asteroidradar.domain.ImageOfDay
 import com.udacity.asteroidradar.main.AsteroidAdapter
 
 @BindingAdapter("statusIcon")
